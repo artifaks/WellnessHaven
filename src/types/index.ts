@@ -1,4 +1,5 @@
 
+
 export interface Herb {
   id: string;
   name: string;
@@ -19,7 +20,7 @@ export interface DatabaseHerb {
   traditional_uses?: string[];
   preparation_methods?: string;
   image_url?: string;
-  benefits?: string;
+  benefits?: string[]; // Changed from string to string[]
   category?: string;
   medicinal_properties?: string[];
 }
@@ -41,3 +42,4 @@ export interface Ebook {
   previewUrl?: string;
   tags: string[];
 }
+

@@ -40,7 +40,7 @@ const Herbs = () => {
         
         if (herbsData) {
           // Transform Supabase data to match our Herb interface
-          const transformedHerbs: Herb[] = herbsData.map((herb: DatabaseHerb) => ({
+          const transformedHerbs: Herb[] = herbsData.map((herb: any) => ({
             id: herb.id,
             name: herb.name,
             scientificName: herb.scientific_name,
@@ -48,7 +48,7 @@ const Herbs = () => {
             uses: herb.uses || herb.traditional_uses || ["General wellness"],
             preparation: herb.preparation_methods || "Various preparation methods available.",
             imageUrl: herb.image_url || "https://images.unsplash.com/photo-1465146344425-f00d5f5c8f07?auto=format&fit=crop&q=80&w=500&h=500",
-            benefits: herb.benefits ? herb.benefits.split(',').map(b => b.trim()) : ["Wellness support"]
+            benefits: Array.isArray(herb.benefits) ? herb.benefits : ["Wellness support"]
           }));
           
           // Combine static herbs with database herbs, preferring database versions if there's overlap
