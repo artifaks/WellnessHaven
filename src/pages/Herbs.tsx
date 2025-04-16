@@ -7,10 +7,11 @@ import { Input } from "@/components/ui/input";
 import { Herb, DatabaseHerb } from "@/types";
 import { herbs as staticHerbs } from "@/data/herbs";
 import Layout from "@/components/Layout";
-import HerbCard from "@/components/HerbCard";
 import HerbDetail from "@/components/HerbDetail";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/components/ui/use-toast";
+import HerbCategoryGuide from "@/components/HerbCategoryGuide";
+import HerbCategoryAccordion from "@/components/HerbCategoryAccordion";
 
 const Herbs = () => {
   const { toast } = useToast();
@@ -48,7 +49,8 @@ const Herbs = () => {
             uses: herb.uses || herb.traditional_uses || ["General wellness"],
             preparation: herb.preparation_methods || "Various preparation methods available.",
             imageUrl: herb.image_url || "https://images.unsplash.com/photo-1465146344425-f00d5f5c8f07?auto=format&fit=crop&q=80&w=500&h=500",
-            benefits: Array.isArray(herb.benefits) ? herb.benefits : ["Wellness support"]
+            benefits: Array.isArray(herb.benefits) ? herb.benefits : ["Wellness support"],
+            category: herb.category || ""
           }));
           
           // Combine static herbs with database herbs, preferring database versions if there's overlap
@@ -157,7 +159,7 @@ const Herbs = () => {
       <div className="container mx-auto px-4 py-8 md:px-6">
         <div className="mb-8 text-center">
           <h1 className="font-serif text-3xl font-bold text-herb-800 md:text-4xl">
-            Medicinal Herb Database
+            Herbalist Haven Database
           </h1>
           <p className="mt-3 font-sans text-lg text-herb-600">
             Explore our collection of healing herbs and their traditional uses
@@ -168,7 +170,9 @@ const Herbs = () => {
           <HerbDetail herb={selectedHerb} onClose={closeHerbDetail} />
         ) : (
           <>
-            {/* Search and Filter Section */}
+            <HerbCategoryGuide />
+
+            {/* Search Section */}
             <div className="mb-10 rounded-xl bg-herb-100/70 p-6 shadow-sm">
               <form onSubmit={handleSearch} className="mb-6">
                 <div className="flex flex-col gap-2 sm:flex-row">
@@ -176,7 +180,7 @@ const Herbs = () => {
                     <Search className="absolute left-3 top-3 h-4 w-4 text-herb-500" />
                     <Input
                       type="text"
-                      placeholder="Search herbs by name or benefit..."
+                      placeholder="Search herbs by name, scientific name, or benefit..."
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
                       className="border-herb-300 pl-9 font-sans placeholder:text-herb-400 focus-visible:ring-herb-500"
@@ -190,32 +194,6 @@ const Herbs = () => {
                   </Button>
                 </div>
               </form>
-
-              <div className="mb-4">
-                <div className="flex items-center gap-2">
-                  <Filter className="h-4 w-4 text-herb-700" />
-                  <h3 className="font-sans text-sm font-semibold text-herb-700">
-                    Filter by Use:
-                  </h3>
-                </div>
-                <div className="mt-3 flex flex-wrap gap-2">
-                  {herbUses.map((use) => (
-                    <Button
-                      key={use}
-                      variant={activeFilter === use ? "default" : "outline"}
-                      size="sm"
-                      onClick={() => handleFilter(use)}
-                      className={
-                        activeFilter === use
-                          ? "bg-herb-600 text-white hover:bg-herb-700"
-                          : "border-herb-300 bg-white text-herb-700 hover:bg-herb-100 hover:text-herb-800"
-                      }
-                    >
-                      {use}
-                    </Button>
-                  ))}
-                </div>
-              </div>
 
               {hasActiveFilters && (
                 <div className="flex items-center justify-between border-t border-herb-200 pt-4">
@@ -243,17 +221,9 @@ const Herbs = () => {
               </div>
             ) : (
               <>
-                {/* Herbs Grid */}
+                {/* Herbs Accordion */}
                 {filteredHerbs.length > 0 ? (
-                  <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                    {filteredHerbs.map((herb) => (
-                      <HerbCard 
-                        key={herb.id} 
-                        herb={herb} 
-                        onClick={() => openHerbDetail(herb)} 
-                      />
-                    ))}
-                  </div>
+                  <HerbCategoryAccordion herbs={filteredHerbs} />
                 ) : (
                   <div className="mt-8 rounded-lg bg-herb-50 p-8 text-center">
                     <h3 className="font-serif text-xl font-semibold text-herb-800">
