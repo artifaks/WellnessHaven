@@ -18,6 +18,10 @@ export default {
 			}
 		},
 		extend: {
+            fontFamily: {
+                serif: ['Cormorant Garamond', 'serif'],
+                sans: ['Nunito Sans', 'sans-serif'],
+            },
 			colors: {
 				border: 'hsl(var(--border))',
 				input: 'hsl(var(--input))',
@@ -52,6 +56,45 @@ export default {
 					DEFAULT: 'hsl(var(--card))',
 					foreground: 'hsl(var(--card-foreground))'
 				},
+                herb: {
+                    50: '#f3f8f4',
+                    100: '#e5efe7',
+                    200: '#cde0d1',
+                    300: '#a5c6ae',
+                    400: '#76a785',
+                    500: '#578e69',
+                    600: '#3a6248',
+                    700: '#355541',
+                    800: '#2c4436',
+                    900: '#25382e',
+                    950: '#121f19',
+                },
+                earth: {
+                    50: '#f8f7f4',
+                    100: '#eeebe4',
+                    200: '#dcd5c6',
+                    300: '#c7b9a2',
+                    400: '#b5a184',
+                    500: '#a79072',
+                    600: '#9a8165',
+                    700: '#866f59',
+                    800: '#6e5b4b',
+                    900: '#5a4b3f',
+                    950: '#302720',
+                },
+                lavender: {
+                    50: '#f5f5fc',
+                    100: '#eeedf9',
+                    200: '#d9d6f0',
+                    300: '#bab5e3',
+                    400: '#988dd3',
+                    500: '#7e69ab',
+                    600: '#6e59a5',
+                    700: '#5b4785',
+                    800: '#4c3c6d',
+                    900: '#413559',
+                    950: '#261e35',
+                },
 				sidebar: {
 					DEFAULT: 'hsl(var(--sidebar-background))',
 					foreground: 'hsl(var(--sidebar-foreground))',
