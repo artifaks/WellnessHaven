@@ -1,23 +1,86 @@
 
 import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
-import { Search, Filter, X } from "lucide-react";
+import { Search, Filter, X, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Herb } from "@/types";
-import { herbs } from "@/data/herbs";
+import { Herb, DatabaseHerb } from "@/types";
+import { herbs as staticHerbs } from "@/data/herbs";
 import Layout from "@/components/Layout";
 import HerbCard from "@/components/HerbCard";
 import HerbDetail from "@/components/HerbDetail";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/components/ui/use-toast";
 
 const Herbs = () => {
+  const { toast } = useToast();
   const [searchParams, setSearchParams] = useSearchParams();
   const [searchTerm, setSearchTerm] = useState(searchParams.get("search") || "");
   const [selectedHerb, setSelectedHerb] = useState<Herb | null>(null);
-  const [filteredHerbs, setFilteredHerbs] = useState<Herb[]>(herbs);
+  const [filteredHerbs, setFilteredHerbs] = useState<Herb[]>(staticHerbs);
   const [activeFilter, setActiveFilter] = useState<string | null>(searchParams.get("use") || null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [allHerbs, setAllHerbs] = useState<Herb[]>(staticHerbs);
 
-  const herbUses = Array.from(new Set(herbs.flatMap(herb => herb.uses)));
+  const herbUses = Array.from(new Set(allHerbs.flatMap(herb => herb.uses)));
+
+  // Fetch herbs from Supabase
+  useEffect(() => {
+    const fetchHerbs = async () => {
+      setIsLoading(true);
+      
+      try {
+        const { data: herbsData, error } = await supabase
+          .from('herbs_data')
+          .select('*');
+          
+        if (error) {
+          throw error;
+        }
+        
+        if (herbsData) {
+          // Transform Supabase data to match our Herb interface
+          const transformedHerbs: Herb[] = herbsData.map((herb: DatabaseHerb) => ({
+            id: herb.id,
+            name: herb.name,
+            scientificName: herb.scientific_name,
+            description: herb.description || "No description available",
+            uses: herb.uses || herb.traditional_uses || ["General wellness"],
+            preparation: herb.preparation_methods || "Various preparation methods available.",
+            imageUrl: herb.image_url || "https://images.unsplash.com/photo-1465146344425-f00d5f5c8f07?auto=format&fit=crop&q=80&w=500&h=500",
+            benefits: herb.benefits ? herb.benefits.split(',').map(b => b.trim()) : ["Wellness support"]
+          }));
+          
+          // Combine static herbs with database herbs, preferring database versions if there's overlap
+          const combinedHerbs = [...staticHerbs];
+          
+          transformedHerbs.forEach(dbHerb => {
+            const existingIndex = combinedHerbs.findIndex(h => 
+              h.name.toLowerCase() === dbHerb.name.toLowerCase());
+            
+            if (existingIndex >= 0) {
+              combinedHerbs[existingIndex] = dbHerb;
+            } else {
+              combinedHerbs.push(dbHerb);
+            }
+          });
+          
+          setAllHerbs(combinedHerbs);
+        }
+      } catch (error) {
+        console.error('Error fetching herbs:', error);
+        toast({
+          title: "Error fetching herbs",
+          description: "Could not load herbs from the database. Showing default herbs instead.",
+          variant: "destructive"
+        });
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchHerbs();
+  }, [toast]);
 
   useEffect(() => {
     const search = searchParams.get("search") || "";
@@ -26,7 +89,7 @@ const Herbs = () => {
     setSearchTerm(search);
     setActiveFilter(use);
     
-    let filtered = herbs;
+    let filtered = allHerbs;
     
     if (search) {
       const lowerSearch = search.toLowerCase();
@@ -43,7 +106,7 @@ const Herbs = () => {
     }
     
     setFilteredHerbs(filtered);
-  }, [searchParams]);
+  }, [searchParams, allHerbs]);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -172,32 +235,42 @@ const Herbs = () => {
               )}
             </div>
 
-            {/* Herbs Grid */}
-            {filteredHerbs.length > 0 ? (
-              <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                {filteredHerbs.map((herb) => (
-                  <HerbCard 
-                    key={herb.id} 
-                    herb={herb} 
-                    onClick={() => openHerbDetail(herb)} 
-                  />
-                ))}
+            {/* Loading State */}
+            {isLoading ? (
+              <div className="flex flex-col items-center justify-center py-12">
+                <Loader2 className="mb-4 h-10 w-10 animate-spin text-herb-600" />
+                <p className="text-herb-600">Loading herbs...</p>
               </div>
             ) : (
-              <div className="mt-8 rounded-lg bg-herb-50 p-8 text-center">
-                <h3 className="font-serif text-xl font-semibold text-herb-800">
-                  No herbs found
-                </h3>
-                <p className="mt-2 font-sans text-herb-600">
-                  Try adjusting your search terms or filters.
-                </p>
-                <Button
-                  onClick={clearFilters}
-                  className="mt-4 bg-herb-600 text-white hover:bg-herb-700"
-                >
-                  Reset Filters
-                </Button>
-              </div>
+              <>
+                {/* Herbs Grid */}
+                {filteredHerbs.length > 0 ? (
+                  <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                    {filteredHerbs.map((herb) => (
+                      <HerbCard 
+                        key={herb.id} 
+                        herb={herb} 
+                        onClick={() => openHerbDetail(herb)} 
+                      />
+                    ))}
+                  </div>
+                ) : (
+                  <div className="mt-8 rounded-lg bg-herb-50 p-8 text-center">
+                    <h3 className="font-serif text-xl font-semibold text-herb-800">
+                      No herbs found
+                    </h3>
+                    <p className="mt-2 font-sans text-herb-600">
+                      Try adjusting your search terms or filters.
+                    </p>
+                    <Button
+                      onClick={clearFilters}
+                      className="mt-4 bg-herb-600 text-white hover:bg-herb-700"
+                    >
+                      Reset Filters
+                    </Button>
+                  </div>
+                )}
+              </>
             )}
           </>
         )}
