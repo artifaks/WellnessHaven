@@ -1,5 +1,5 @@
 
-import { Heart, Brain, Coffee, Lungs, Flower, Droplet, Apple, Activity, User, UserFemale } from "lucide-react";
+import { Heart, Brain, Coffee, Wind, Flower, Droplet, Apple, Activity, User, CircleUser } from "lucide-react";
 
 interface CategoryItem {
   icon: React.ReactNode;
@@ -29,7 +29,7 @@ const HerbCategoryGuide = () => {
       color: "bg-blue-400",
     },
     {
-      icon: <UserFemale className="h-6 w-6 text-white" />,
+      icon: <CircleUser className="h-6 w-6 text-white" />,
       title: "Herbs that support",
       description: "women's health and hormonal balance",
       color: "bg-pink-400",
@@ -59,7 +59,7 @@ const HerbCategoryGuide = () => {
       color: "bg-cyan-500",
     },
     {
-      icon: <Lungs className="h-6 w-6 text-white" />,
+      icon: <Wind className="h-6 w-6 text-white" />,
       title: "Herbs that support",
       description: "respiratory function and lung health",
       color: "bg-sky-400",

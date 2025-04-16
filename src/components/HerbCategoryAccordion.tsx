@@ -1,6 +1,6 @@
 
 import { useState } from "react";
-import { ChevronDown, Heart, Brain, Coffee, Lungs, Flower, Droplet, Apple, Activity, User, UserFemale } from "lucide-react";
+import { ChevronDown, Heart, Brain, Coffee, Wind, Flower, Droplet, Apple, Activity, User, CircleUser } from "lucide-react";
 import { Herb } from "@/types";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import HerbCard from "@/components/HerbCard";
@@ -46,7 +46,7 @@ const HerbCategoryAccordion = ({ herbs }: HerbCategoryAccordionProps) => {
       id: "womens",
       name: "Women's Health",
       color: "bg-pink-500",
-      icon: <UserFemale className="h-5 w-5 text-white" />,
+      icon: <CircleUser className="h-5 w-5 text-white" />,
       keywords: ["women", "menstrual", "menopause", "female", "hormonal", "fertility"],
     },
     {
@@ -81,7 +81,7 @@ const HerbCategoryAccordion = ({ herbs }: HerbCategoryAccordionProps) => {
       id: "respiratory",
       name: "Respiratory Health",
       color: "bg-sky-500",
-      icon: <Lungs className="h-5 w-5 text-white" />,
+      icon: <Wind className="h-5 w-5 text-white" />,
       keywords: ["respiratory", "lung", "breath", "cough", "asthma", "bronchial"],
     },
     {
