@@ -15,9 +15,10 @@ interface CategoryConfig {
 
 interface HerbCategoryAccordionProps {
   herbs: Herb[];
+  onHerbClick: (herb: Herb) => void;
 }
 
-const HerbCategoryAccordion = ({ herbs }: HerbCategoryAccordionProps) => {
+const HerbCategoryAccordion = ({ herbs, onHerbClick }: HerbCategoryAccordionProps) => {
   const [openCategories, setOpenCategories] = useState<string[]>([]);
   
   const categories: CategoryConfig[] = [
@@ -182,7 +183,11 @@ const HerbCategoryAccordion = ({ herbs }: HerbCategoryAccordionProps) => {
               <AccordionContent className="bg-white pt-4">
                 <div className="grid gap-4 p-2 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
                   {categoryHerbs.map(herb => (
-                    <HerbCard key={herb.id} herb={herb} onClick={() => {}} />
+                    <HerbCard 
+                      key={herb.id} 
+                      herb={herb} 
+                      onClick={() => onHerbClick(herb)} 
+                    />
                   ))}
                 </div>
               </AccordionContent>
