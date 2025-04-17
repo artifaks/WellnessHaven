@@ -1,4 +1,3 @@
-
 import { Link } from "react-router-dom";
 import { Search, MessageCircle, BookOpen, ChevronRight, Leaf } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -44,8 +43,8 @@ const Index = () => {
             </div>
             <div className="hidden md:block">
               <img 
-                src="https://images.unsplash.com/photo-1546375982-c22276aa12f0?auto=format&fit=crop&q=80&w=600&h=500" 
-                alt="Medicinal herbs and plants" 
+                src="https://elhhfkmuivqbgrbennmo.supabase.co/storage/v1/object/public/herb.images//healing-medical-herbs-and-flowers-2025-02-25-00-03-28-utc.jpg" 
+                alt="Medicinal herbs and flowers" 
                 className="mx-auto rounded-2xl shadow-xl"
               />
             </div>
