@@ -1,4 +1,3 @@
-
 import { Herb } from "@/types";
 
 export const herbs: Herb[] = [
@@ -394,52 +393,4 @@ export const herbs: Herb[] = [
     description: "Plantain is a common lawn plant with broad leaves. It has been used traditionally for wound healing, skin irritations, and digestive issues.",
     uses: ["Wound healing", "Skin soothing", "Digestive support", "Respiratory health"],
     preparation: "Fresh leaves can be applied directly to wounds, dried for tea, or made into a salve. For tea, steep 1-2 teaspoons of dried herb in hot water.",
-    imageUrl: "https://images.unsplash.com/photo-1542483110-82a2790bc74a?auto=format&fit=crop&q=80&w=500&h=500",
-    benefits: ["Natural antimicrobial", "Soothes skin inflammation", "Supports digestive health", "Helps with respiratory conditions"],
-    category: "First aid"
-  },
-  {
-    id: "37",
-    name: "Comfrey",
-    scientificName: "Symphytum officinale",
-    description: "Comfrey is a perennial herb with large, hairy leaves and bell-shaped flowers. It has been used traditionally for wound healing, bone and tissue repair.",
-    uses: ["Wound healing", "Bone support", "Skin care", "Pain relief"],
-    preparation: "Used externally as poultice, salve, or cream. Not recommended for internal use due to pyrrolizidine alkaloids.",
-    imageUrl: "https://images.unsplash.com/photo-1564453361264-52292e0fc18d?auto=format&fit=crop&q=80&w=500&h=500",
-    benefits: ["Promotes tissue repair", "Contains allantoin", "Reduces inflammation", "Supports skin healing"],
-    category: "Skin health"
-  },
-  {
-    id: "38",
-    name: "Reishi Mushroom",
-    scientificName: "Ganoderma lucidum",
-    description: "Reishi is a medicinal mushroom that has been used in traditional Eastern medicine for thousands of years. It's known for its immune-supporting properties.",
-    uses: ["Immune support", "Stress management", "Sleep improvement", "Longevity"],
-    preparation: "Commonly taken as capsules, tinctures, or powders. Can also be prepared as tea by simmering dried pieces for 30+ minutes.",
-    imageUrl: "https://images.unsplash.com/photo-1611653387326-64208e164661?auto=format&fit=crop&q=80&w=500&h=500",
-    benefits: ["Supports immune function", "Contains antioxidants", "Adaptogenic properties", "Supports liver health"],
-    category: "Adaptogenic"
-  },
-  {
-    id: "39",
-    name: "Slippery Elm",
-    scientificName: "Ulmus rubra",
-    description: "Slippery elm is a tree native to North America, with an inner bark that has been used medicinally for centuries. It forms a slippery gel when mixed with water.",
-    uses: ["Digestive support", "Sore throat relief", "Wound healing", "Cough relief"],
-    preparation: "Available as lozenges, capsules, powder, or tea. For tea, mix 1-2 teaspoons of powder with hot water.",
-    imageUrl: "https://images.unsplash.com/photo-1542727365-19732a80dcfd?auto=format&fit=crop&q=80&w=500&h=500",
-    benefits: ["Soothes digestive tract", "Creates protective coating", "Rich in antioxidants", "Calms inflammation"],
-    category: "Digestive health"
-  },
-  {
-    id: "40",
-    name: "Linden",
-    scientificName: "Tilia species",
-    description: "Linden is a flowering tree whose blossoms have been used in herbal medicine. It has a pleasant taste and calming properties.",
-    uses: ["Anxiety relief", "Cold and flu support", "Sleep improvement", "Digestive aid"],
-    preparation: "Most commonly consumed as tea. For tea, steep 1-2 teaspoons of dried flowers in hot water for 10 minutes.",
-    imageUrl: "https://images.unsplash.com/photo-1523942839364-84b610fcf9e5?auto=format&fit=crop&q=80&w=500&h=500",
-    benefits: ["Calms nervous system", "Supports immune function", "Has mild diaphoretic effect", "Soothes digestion"],
-    category: "Nervous system"
-  }
-];
+    imageUrl:

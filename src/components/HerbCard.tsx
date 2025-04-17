@@ -72,7 +72,22 @@ const herbEmojis = {
   "Red Clover": "🍀",
   "Plantain": "🍃",
   "Reishi Mushroom": "🍄",
-  "Linden": "🌳"
+  "Linden": "🌳",
+  "Borage": "💙",
+  "Cat's Claw": "🐱",
+  "Chickweed": "🌱",
+  "Fenugreek": "🌿",
+  "Gentian": "💫",
+  "Irish Moss": "🌊",
+  "Jasmine": "👑",
+  "Marshmallow Root": "🦷",
+  "Parsley": "🌿",
+  "Raspberry Leaf": "🍓",
+  "Sarsaparilla": "🥤",
+  "Shepherd's Purse": "👝",
+  "Stevia": "🍬",
+  "Uva Ursi": "🍇",
+  "White Willow Bark": "🌳"
 };
 
 const colorVariants = [
