@@ -97,31 +97,31 @@ const HerbCard = ({ herb, onClick }: HerbCardProps) => {
         ${bg} ${border} border`}
       onClick={onClick}
     >
-      <div className="relative aspect-square overflow-hidden flex items-center justify-center text-6xl p-4">
+      <div className="relative aspect-square overflow-hidden flex items-center justify-center text-4xl p-2">
         <span>{herbEmoji}</span>
       </div>
-      <CardContent className="p-4">
-        <h3 className={`font-serif text-xl font-semibold ${text} flex items-center gap-2`}>
+      <CardContent className="p-3">
+        <h3 className={`font-serif text-base font-semibold ${text} flex items-center gap-1`}>
           {herb.name}
         </h3>
-        <p className="mb-3 font-sans text-sm italic text-herb-600">
+        <p className="mb-2 font-sans text-xs italic text-herb-600">
           {herb.scientificName}
         </p>
-        <p className="line-clamp-2 mb-3 font-sans text-sm text-herb-700">
+        <p className="line-clamp-2 mb-2 font-sans text-xs text-herb-700">
           {herb.description}
         </p>
         <div className="flex flex-wrap gap-1">
-          {herb.uses.slice(0, 3).map((use, index) => (
+          {herb.uses.slice(0, 2).map((use, index) => (
             <Badge 
               key={index} 
-              className={`${bg} ${text} hover:opacity-80`}
+              className={`${bg} ${text} hover:opacity-80 text-[0.6rem] px-1.5 py-0.5`}
             >
               {use}
             </Badge>
           ))}
-          {herb.uses.length > 3 && (
-            <Badge className={`${bg} ${text} hover:opacity-80`}>
-              +{herb.uses.length - 3}
+          {herb.uses.length > 2 && (
+            <Badge className={`${bg} ${text} hover:opacity-80 text-[0.6rem] px-1.5 py-0.5`}>
+              +{herb.uses.length - 2}
             </Badge>
           )}
         </div>

@@ -181,7 +181,7 @@ const HerbCategoryAccordion = ({ herbs, onHerbClick }: HerbCategoryAccordionProp
                 <ChevronDown className="h-5 w-5 shrink-0 text-white transition-transform duration-200" />
               </AccordionTrigger>
               <AccordionContent className="bg-white pt-4">
-                <div className="grid gap-4 p-2 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
+                <div className="grid gap-3 p-2 grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
                   {categoryHerbs.map(herb => (
                     <HerbCard 
                       key={herb.id} 
