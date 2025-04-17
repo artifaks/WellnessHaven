@@ -1,6 +1,5 @@
-
 import React, { useState } from 'react';
-import { ArrowLeft, Heart, Droplet, FileText, History, Leaf, BarChart, Plus, Clock, Share, Printer, BookmarkSimple } from 'lucide-react';
+import { ArrowLeft, Heart, Droplet, FileText, History, Leaf, BarChart, Plus, Clock, Share, Printer, Bookmark } from 'lucide-react';
 import { Herb } from "@/types";
 import { Badge } from "@/components/ui/badge";
 
@@ -175,7 +174,7 @@ const HerbDetail = ({ herb, onClose }: HerbDetailProps) => {
             {/* Action Buttons */}
             <div className="flex flex-wrap gap-2 justify-center md:justify-start">
               <button className="flex items-center px-3 py-1.5 rounded-full bg-white shadow-sm text-gray-700 text-sm hover:bg-gray-50 transition-colors">
-                <BookmarkSimple className="w-4 h-4 mr-1" />
+                <Bookmark className="w-4 h-4 mr-1" />
                 <span>Save</span>
               </button>
               <button className="flex items-center px-3 py-1.5 rounded-full bg-white shadow-sm text-gray-700 text-sm hover:bg-gray-50 transition-colors">
