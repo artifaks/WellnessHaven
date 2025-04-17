@@ -3,6 +3,22 @@ import { Herb } from "@/types";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 
+const herbEmojis = {
+  "Mint": "🌿",
+  "Lavender": "💜",
+  "Chamomile": "🌼",
+  "Echinacea": "🌱",
+  "Ginger": "🌶️",
+  "Turmeric": "🟡",
+  "Valerian": "💤",
+  "Ginseng": "💪",
+  "Rosemary": "🌹",
+  "Thyme": "🍃",
+  "St. John's Wort": "☀️",
+  "Ashwagandha": "🧘",
+  // Add more mappings as needed
+};
+
 const colorVariants = [
   { bg: "bg-emerald-50", border: "border-emerald-200", text: "text-emerald-800" },
   { bg: "bg-purple-50", border: "border-purple-200", text: "text-purple-800" },
@@ -22,21 +38,20 @@ const HerbCard = ({ herb, onClick }: HerbCardProps) => {
   const colorIndex = herb.name.charCodeAt(0) % colorVariants.length;
   const { bg, border, text } = colorVariants[colorIndex];
 
+  // Get emoji for the herb, default to a generic herb emoji if not found
+  const herbEmoji = herbEmojis[herb.name] || '🌿';
+
   return (
     <Card 
       className={`overflow-hidden transition-all duration-300 hover:shadow-md cursor-pointer 
         ${bg} ${border} border`}
       onClick={onClick}
     >
-      <div className="relative aspect-square overflow-hidden">
-        <img
-          src={herb.imageUrl}
-          alt={herb.name}
-          className="h-full w-full object-cover transition-transform duration-300 hover:scale-105"
-        />
+      <div className="relative aspect-square overflow-hidden flex items-center justify-center text-6xl p-4">
+        <span>{herbEmoji}</span>
       </div>
       <CardContent className="p-4">
-        <h3 className={`font-serif text-xl font-semibold ${text}`}>
+        <h3 className={`font-serif text-xl font-semibold ${text} flex items-center gap-2`}>
           {herb.name}
         </h3>
         <p className="mb-3 font-sans text-sm italic text-herb-600">
