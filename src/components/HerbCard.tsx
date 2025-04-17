@@ -68,6 +68,11 @@ const herbEmojis = {
   "Skullcap": "🧢",
   "Ginkgo Biloba": "🍃",
   "Astragalus": "🧬",
+  "Burdock Root": "🌾",
+  "Red Clover": "🍀",
+  "Plantain": "🍃",
+  "Reishi Mushroom": "🍄",
+  "Linden": "🌳"
 };
 
 const colorVariants = [

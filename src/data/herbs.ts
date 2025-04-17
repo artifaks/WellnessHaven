@@ -1,4 +1,3 @@
-
 import { Herb } from "@/types";
 
 export const herbs: Herb[] = [
@@ -331,6 +330,67 @@ export const herbs: Herb[] = [
     imageUrl: "https://images.unsplash.com/photo-1631528754096-1047b0302be2?auto=format&fit=crop&q=80&w=500&h=500",
     benefits: ["Improves blood circulation", "Enhances cognitive function", "Contains antioxidants", "May help with tinnitus"],
     category: "Cognitive health"
-  }
-];
-
+  },
+  {
+    id: "31",
+    name: "Mullein",
+    scientificName: "Verbascum thapsus",
+    description: "Mullein is a biennial plant with soft, woolly leaves and tall flowering stalks. It has been used traditionally for respiratory conditions and ear infections.",
+    uses: ["Respiratory support", "Ear health", "Lymphatic support", "Skin care"],
+    preparation: "The leaves can be made into tea, tinctures, or oil infusions. For tea, steep 1-2 teaspoons of dried leaf in hot water for 10-15 minutes.",
+    imageUrl: "https://images.unsplash.com/photo-1567334726983-84df9c86e689?auto=format&fit=crop&q=80&w=500&h=500",
+    benefits: ["Soothes respiratory tract", "Supports ear health", "Has mild expectorant properties", "Helps with lymphatic drainage"],
+    category: "Respiratory health"
+  },
+  {
+    id: "32",
+    name: "Yarrow",
+    scientificName: "Achillea millefolium",
+    description: "Yarrow is a flowering plant known for its feathery leaves and clusters of small flowers. It has been used for centuries to stop bleeding, reduce fever, and aid digestion.",
+    uses: ["Wound healing", "Fever reduction", "Digestive support", "Menstrual regulation"],
+    preparation: "Can be used as tea, tincture, or poultice. For tea, steep 1-2 teaspoons of dried herb in hot water for 10-15 minutes.",
+    imageUrl: "https://images.unsplash.com/photo-1598511726623-d2e9996e8a69?auto=format&fit=crop&q=80&w=500&h=500",
+    benefits: ["Stops bleeding", "Reduces inflammation", "Supports digestion", "Has antimicrobial properties"],
+    category: "First aid"
+  },
+  {
+    id: "33",
+    name: "Burdock Root",
+    scientificName: "Arctium lappa",
+    description: "Burdock is a biennial plant with large leaves and burr-like flowers. Its root has been used in traditional medicine for detoxification and skin conditions.",
+    uses: ["Skin health", "Detoxification", "Digestive support", "Blood purification"],
+    preparation: "Can be consumed as tea, tincture, or added to soups. For tea, simmer 1-2 teaspoons of dried root in water for 15-20 minutes.",
+    imageUrl: "https://images.unsplash.com/photo-1628955889369-979f9973a77e?auto=format&fit=crop&q=80&w=500&h=500",
+    benefits: ["Supports liver function", "Improves skin conditions", "Aids digestion", "Has antioxidant properties"],
+    category: "Detoxification"
+  },
+  {
+    id: "34",
+    name: "Red Clover",
+    scientificName: "Trifolium pratense",
+    description: "Red clover is a flowering plant rich in isoflavones. It has been used traditionally for women's health, skin conditions, and respiratory issues.",
+    uses: ["Women's health", "Skin support", "Respiratory health", "Blood cleansing"],
+    preparation: "Can be consumed as tea, tincture, or in capsule form. For tea, steep 1-2 teaspoons of dried flowers in hot water for 10-15 minutes.",
+    imageUrl: "https://images.unsplash.com/photo-1568397284298-5bd87e327dd1?auto=format&fit=crop&q=80&w=500&h=500",
+    benefits: ["Supports hormonal balance", "May help with menopausal symptoms", "Improves skin health", "Supports respiratory function"],
+    category: "Women's health"
+  },
+  {
+    id: "35",
+    name: "Thyme",
+    scientificName: "Thymus vulgaris",
+    description: "Thyme is an aromatic herb with small, fragrant leaves. It has been used for centuries for its antiseptic properties and respiratory benefits.",
+    uses: ["Respiratory support", "Immune enhancement", "Antimicrobial", "Digestive aid"],
+    preparation: "Can be used fresh or dried in cooking, steeped as tea, or used as an essential oil in diluted form.",
+    imageUrl: "https://images.unsplash.com/photo-1589881920074-caa368296a2f?auto=format&fit=crop&q=80&w=500&h=500",
+    benefits: ["Has antimicrobial properties", "Supports respiratory health", "Soothes coughs", "Aids digestion"],
+    category: "Respiratory health"
+  },
+  {
+    id: "36",
+    name: "Plantain",
+    scientificName: "Plantago major",
+    description: "Plantain is a common lawn plant with broad leaves. It has been used traditionally for wound healing, skin irritations, and digestive issues.",
+    uses: ["Wound healing", "Skin soothing", "Digestive support", "Respiratory health"],
+    preparation: "Fresh leaves can be applied directly to wounds, dried for tea, or made into a salve. For tea, steep 1-2 teaspoons of dried herb in hot water.",
+    imageUrl:
