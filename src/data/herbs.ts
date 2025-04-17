@@ -1,4 +1,3 @@
-
 import { Herb } from "@/types";
 
 export const herbs: Herb[] = [
@@ -394,52 +393,4 @@ export const herbs: Herb[] = [
     description: "Plantain is a common lawn plant with broad leaves. It has been used traditionally for wound healing, skin irritations, and digestive issues.",
     uses: ["Wound healing", "Skin soothing", "Digestive support", "Respiratory health"],
     preparation: "Fresh leaves can be applied directly to wounds, dried for tea, or made into a salve. For tea, steep 1-2 teaspoons of dried herb in hot water.",
-    imageUrl: "https://images.unsplash.com/photo-1542483110-82a2790bc74a?auto=format&fit=crop&q=80&w=500&h=500",
-    benefits: ["Natural antimicrobial", "Soothes skin inflammation", "Supports digestive health", "Helps with respiratory conditions"],
-    category: "First aid"
-  },
-  {
-    id: "37",
-    name: "Borage",
-    scientificName: "Borago officinalis",
-    description: "Borage is a flowering herb with star-shaped blue flowers. It has been used traditionally for its anti-inflammatory properties and as a source of gamma-linolenic acid.",
-    uses: ["Skin health", "Anti-inflammatory", "Adrenal support", "Mood enhancement"],
-    preparation: "The leaves and flowers can be consumed fresh in salads, steeped as tea, or used to make infused oil. For tea, steep 1-2 teaspoons of dried herb in hot water for 10 minutes.",
-    imageUrl: "https://images.unsplash.com/photo-1560850038-f95de6e715b3?auto=format&fit=crop&q=80&w=500&h=500",
-    benefits: ["Rich in essential fatty acids", "Supports skin health", "Has anti-inflammatory properties", "May support adrenal function"],
-    category: "Skin health"
-  },
-  {
-    id: "38",
-    name: "Cat's Claw",
-    scientificName: "Uncaria tomentosa",
-    description: "Cat's Claw is a woody vine native to the Amazon rainforest. Its bark and root have been used in traditional medicine for immune support and inflammation reduction.",
-    uses: ["Immune support", "Anti-inflammatory", "Arthritis relief", "Digestive aid"],
-    preparation: "Available as capsules, tablets, tinctures, or tea. For tea, simmer 1 teaspoon of dried bark in water for 15-20 minutes.",
-    imageUrl: "https://images.unsplash.com/photo-1603478614550-fc162e5d3e3d?auto=format&fit=crop&q=80&w=500&h=500",
-    benefits: ["Boosts immune function", "Reduces inflammation", "Supports joint health", "Has antioxidant properties"],
-    category: "Immune system"
-  },
-  {
-    id: "39",
-    name: "Chickweed",
-    scientificName: "Stellaria media",
-    description: "Chickweed is a common garden weed with small white star-shaped flowers. It has been used traditionally for skin conditions, digestive issues, and as a cooling herb.",
-    uses: ["Skin conditions", "Cooling effect", "Digestive support", "Eye health"],
-    preparation: "Can be eaten fresh in salads, made into tea, or used as a poultice. For tea, steep 1-2 teaspoons of dried herb in hot water for 10 minutes.",
-    imageUrl: "https://images.unsplash.com/photo-1600106621183-82aa7cd8581a?auto=format&fit=crop&q=80&w=500&h=500",
-    benefits: ["Cools and soothes skin", "Rich in vitamins and minerals", "Has anti-inflammatory properties", "Supports digestive health"],
-    category: "Skin health"
-  },
-  {
-    id: "40",
-    name: "Fenugreek",
-    scientificName: "Trigonella foenum-graecum",
-    description: "Fenugreek is an herb with small leaflets and distinctive yellow-brown seeds. It has been used in traditional medicine for digestive issues, blood sugar management, and to support nursing mothers.",
-    uses: ["Lactation support", "Blood sugar management", "Digestive aid", "Cholesterol support"],
-    preparation: "Seeds can be sprouted, used whole or ground in cooking, or steeped as tea. For tea, use 1 teaspoon of seeds in hot water for 10-15 minutes.",
-    imageUrl: "https://images.unsplash.com/photo-1593477187573-c7aa313bc772?auto=format&fit=crop&q=80&w=500&h=500",
-    benefits: ["May increase milk production", "Supports blood sugar balance", "Aids digestion", "Rich in nutrients"],
-    category: "Women's health"
-  }
-];
+    imageUrl:
