@@ -27,76 +27,101 @@ const HerbCategoryAccordion = ({ herbs, onHerbClick }: HerbCategoryAccordionProp
       name: "Heart Health",
       color: "bg-red-500",
       icon: <Heart className="h-5 w-5 text-white" />,
-      keywords: ["heart", "cardiovascular", "circulation", "blood pressure", "cholesterol"],
+      keywords: ["heart", "cardiovascular", "circulation", "blood pressure", "cholesterol", "hawthorn"],
     },
     {
       id: "digestive",
       name: "Digestive Health",
       color: "bg-emerald-500",
       icon: <Apple className="h-5 w-5 text-white" />,
-      keywords: ["digestive", "gut", "stomach", "intestine", "digestion", "nausea"],
+      keywords: ["digestive", "gut", "stomach", "intestine", "digestion", "nausea", "peppermint", "ginger", "fennel", "licorice"],
     },
     {
       id: "mens",
       name: "Men's Health",
       color: "bg-blue-500",
       icon: <User className="h-5 w-5 text-white" />,
-      keywords: ["men", "prostate", "testosterone", "male"],
+      keywords: ["men", "prostate", "testosterone", "male", "saw palmetto", "ginseng", "energy"],
     },
     {
       id: "womens",
       name: "Women's Health",
       color: "bg-pink-500",
       icon: <CircleUser className="h-5 w-5 text-white" />,
-      keywords: ["women", "menstrual", "menopause", "female", "hormonal", "fertility"],
+      keywords: ["women", "menstrual", "menopause", "female", "hormonal", "fertility", "black cohosh", "evening primrose", "dong quai", "red raspberry"],
     },
     {
       id: "cognitive",
       name: "Brain & Cognitive Health",
       color: "bg-purple-500",
       icon: <Brain className="h-5 w-5 text-white" />,
-      keywords: ["brain", "cognitive", "memory", "focus", "mental", "nervous system"],
+      keywords: ["brain", "cognitive", "memory", "focus", "mental", "nervous system", "ginkgo", "rosemary", "sage", "bacopa"],
     },
     {
       id: "tea",
       name: "Herbal Teas",
       color: "bg-teal-500",
       icon: <Coffee className="h-5 w-5 text-white" />,
-      keywords: ["tea", "infusion", "beverage", "drink"],
+      keywords: ["tea", "infusion", "beverage", "drink", "chamomile", "peppermint", "lavender", "green tea", "lemon balm", "holy basil"],
     },
     {
       id: "liver",
       name: "Liver & Detox",
       color: "bg-green-500",
       icon: <Droplet className="h-5 w-5 text-white" />,
-      keywords: ["liver", "detox", "cleanse", "toxin"],
+      keywords: ["liver", "detox", "cleanse", "toxin", "milk thistle", "dandelion", "turmeric", "burdock", "schisandra"],
     },
     {
       id: "joint",
       name: "Joint & Bone Health",
       color: "bg-cyan-500",
       icon: <Activity className="h-5 w-5 text-white" />,
-      keywords: ["joint", "bone", "arthritis", "muscle", "inflammation", "pain"],
+      keywords: ["joint", "bone", "arthritis", "muscle", "inflammation", "pain", "turmeric", "ginger", "boswellia", "cayenne"],
     },
     {
       id: "respiratory",
       name: "Respiratory Health",
       color: "bg-sky-500",
       icon: <Wind className="h-5 w-5 text-white" />,
-      keywords: ["respiratory", "lung", "breath", "cough", "asthma", "bronchial"],
+      keywords: ["respiratory", "lung", "breath", "cough", "asthma", "bronchial", "mullein", "thyme", "eucalyptus", "elderberry", "oregano"],
     },
     {
       id: "skin",
       name: "Skin Health",
       color: "bg-rose-500",
       icon: <Flower className="h-5 w-5 text-white" />,
-      keywords: ["skin", "complexion", "acne", "eczema", "dermatitis", "wound"],
+      keywords: ["skin", "complexion", "acne", "eczema", "dermatitis", "wound", "calendula", "aloe vera", "tea tree", "lavender", "chamomile"],
+    },
+    {
+      id: "immune",
+      name: "Immune Support",
+      color: "bg-amber-500",
+      icon: <Activity className="h-5 w-5 text-white" />,
+      keywords: ["immune", "antiviral", "antibacterial", "echinacea", "elderberry", "astragalus", "reishi", "garlic"],
+    },
+    {
+      id: "stress",
+      name: "Stress & Relaxation",
+      color: "bg-indigo-500",
+      icon: <Coffee className="h-5 w-5 text-white" />,
+      keywords: ["stress", "anxiety", "relaxation", "sleep", "valerian", "chamomile", "lavender", "passionflower", "ashwagandha", "lemon balm", "holy basil", "kava"],
     },
   ];
 
-  // Helper function to categorize herbs
+  // Helper function to categorize herbs with enhanced flexibility
   const categorizeHerbs = (herbs: Herb[], category: CategoryConfig) => {
+    // First direct matching by name for specific herbs
+    const herbsToInclude = category.keywords.filter(keyword => 
+      herbs.some(herb => herb.name.toLowerCase().includes(keyword.toLowerCase()))
+    );
+    
     return herbs.filter(herb => {
+      // Direct herb name match (highest priority)
+      if (herbsToInclude.some(keyword => 
+        herb.name.toLowerCase().includes(keyword.toLowerCase()))) {
+        return true;
+      }
+      
       // Check if herb category matches
       if (herb.category && category.keywords.some(keyword => 
         herb.category?.toLowerCase().includes(keyword.toLowerCase()))) {
@@ -118,6 +143,19 @@ const HerbCategoryAccordion = ({ herbs, onHerbClick }: HerbCategoryAccordionProp
       // Check description for keywords
       if (herb.description && category.keywords.some(keyword => 
         herb.description.toLowerCase().includes(keyword.toLowerCase()))) {
+        return true;
+      }
+      
+      // For specific categories, do additional checks
+      if (category.id === "immune" && herb.benefits && 
+          herb.benefits.some(benefit => benefit.toLowerCase().includes("immune"))) {
+        return true;
+      }
+      
+      if (category.id === "stress" && herb.benefits && 
+          herb.benefits.some(benefit => 
+            ["calm", "relax", "stress", "sleep", "anxiety"].some(term => 
+              benefit.toLowerCase().includes(term)))) {
         return true;
       }
       
