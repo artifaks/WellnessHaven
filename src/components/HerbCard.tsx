@@ -48,6 +48,7 @@ const herbEmojis = {
   "Cayenne": "🔥",
   "Dong Quai": "🌸",
   "Goldenseal": "💰",
+  "Hawthorn": "❤️",
   "Kava Kava": "🏝️",
   "Red Raspberry Leaf": "🍃",
   "Tea Tree": "🌳",
@@ -57,16 +58,19 @@ const herbEmojis = {
   "Cardamom": "💫",
   "Comfrey": "🩹",
   "Cranberry": "🔴",
-  "Hawthorn": "❤️",
   "Hops": "🍺",
   "Horsetail": "🐎",
   "Juniper": "🌲",
   "Maca": "🥔",
   "Meadowsweet": "🌼",
   "Mullein": "🧣",
-  // Removed duplicate "Oregano" entry
   "Rhubarb": "🫨",
   "Slippery Elm": "🌳",
+  "Skullcap": "🧢",
+  "Ginkgo Biloba": "🍃",
+  "Astragalus": "🧬",
+  "Black Cohosh": "🌑",
+  "Feverfew": "🌡️"
 };
 
 const colorVariants = [
