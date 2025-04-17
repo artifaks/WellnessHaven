@@ -11,7 +11,7 @@ interface HerbCardProps {
 const HerbCard = ({ herb, onClick }: HerbCardProps) => {
   return (
     <Card 
-      className="overflow-hidden transition-all duration-300 hover:shadow-md"
+      className="overflow-hidden transition-all duration-300 hover:shadow-md cursor-pointer"
       onClick={onClick}
     >
       <div className="relative aspect-square overflow-hidden">

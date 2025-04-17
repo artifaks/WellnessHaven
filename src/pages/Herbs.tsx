@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import { Search, Filter, X, Loader2 } from "lucide-react";
@@ -223,7 +222,10 @@ const Herbs = () => {
               <>
                 {/* Herbs Accordion */}
                 {filteredHerbs.length > 0 ? (
-                  <HerbCategoryAccordion herbs={filteredHerbs} />
+                  <HerbCategoryAccordion 
+                    herbs={filteredHerbs} 
+                    onHerbClick={openHerbDetail} 
+                  />
                 ) : (
                   <div className="mt-8 rounded-lg bg-herb-50 p-8 text-center">
                     <h3 className="font-serif text-xl font-semibold text-herb-800">

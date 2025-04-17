@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { ArrowLeft, Heart, Droplet, FileText, History, Leaf, BarChart, Plus } from 'lucide-react';
 import { Herb } from "@/types";
