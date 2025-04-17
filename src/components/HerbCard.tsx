@@ -1,3 +1,4 @@
+
 import { Herb } from "@/types";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -63,7 +64,7 @@ const herbEmojis = {
   "Maca": "🥔",
   "Meadowsweet": "🌼",
   "Mullein": "🧣",
-  "Oregano": "🌿",
+  // Removed duplicate "Oregano" entry
   "Rhubarb": "🫨",
   "Slippery Elm": "🌳",
 };
