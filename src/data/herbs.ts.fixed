@@ -1,0 +1,40 @@
+import { Herb } from "@/types";
+
+export const herbs: Herb[] = [
+// Duplicate ID check (temporary, for debugging)
+// Uncomment and run with ts-node or in your app to see duplicate IDs
+// (() => {
+//   const idSet = new Set();
+//   herbs.forEach(h => {
+//     if (idSet.has(h.id)) {
+//       console.log('Duplicate ID:', h.id, h.name);
+//     }
+//     idSet.add(h.id);
+//   });
+// })();
+
+  {
+    id: "1",
+    name: "Echinacea",
+    scientificName: "Echinacea purpurea",
+    description: "Echinacea is a flowering plant used to boost the immune system and fight infections. Native to North America, it has been used in traditional medicine for centuries.",
+    uses: ["Immune support", "Cold and flu prevention", "Wound healing"],
+    preparation: "Echinacea can be consumed as a tea, tincture, or in capsule form. For tea, steep 1-2 teaspoons of dried herb in hot water for 10-15 minutes.",
+    imageUrl: "https://images.unsplash.com/photo-1550679566-43a082207f5d?auto=format&fit=crop&q=80&w=500&h=500",
+    benefits: ["Boosts immune system", "Reduces inflammation", "May shorten duration of colds and flu", "Contains antioxidants"],
+    category: "Immune system"
+  },
+  // All your other herbs would be here
+  // ...
+  {
+    id: "117",
+    name: "Lapacho (Pau d'Arco) Tea",
+    scientificName: "Tabebuia impetiginosa",
+    description: "A South American tree bark tea, Lapacho is prized for its immune and antimicrobial benefits.",
+    uses: ["Immune support", "Antimicrobial", "Detoxification"],
+    preparation: "Simmer bark in water for 15 minutes for tea.",
+    imageUrl: "https://images.unsplash.com/photo-1517594422361-5eeb8ae275a9?auto=format&fit=crop&q=80&w=500&h=500",
+    benefits: ["Boosts immunity", "Fights microbes", "Detoxifies body"],
+    category: "Herbal teas"
+  }
+];

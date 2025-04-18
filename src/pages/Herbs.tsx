@@ -197,7 +197,7 @@ const Herbs = () => {
               {hasActiveFilters && (
                 <div className="flex items-center justify-between border-t border-herb-200 pt-4">
                   <p className="font-sans text-sm text-herb-600">
-                    <span className="font-medium">{filteredHerbs.length}</span> herbs found
+                    <span className="font-medium">{filteredHerbs.length}</span> of <span className="font-medium">{allHerbs.length}</span> herbs found
                   </p>
                   <Button
                     variant="ghost"

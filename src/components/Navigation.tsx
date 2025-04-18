@@ -23,21 +23,27 @@ const Navigation = () => {
   const navLinks = [
     { name: "Home", path: "/" },
     { name: "Herb Database", path: "/herbs" },
+    { name: "Tea Recipes", path: "/tea-recipes" },
+    { name: "Blog", path: "/blog" },
     { name: "Herbal Chat", path: "/chat" },
     { name: "Ebook Store", path: "/ebooks" },
+    { name: "Admin", path: "/admin/blog" },
   ];
 
   return (
-    <nav className="bg-herb-100 py-4 shadow-sm">
+    <nav className="bg-herb-100 py-4 md:py-6 shadow-sm sticky top-0 z-50 transition-all duration-300">
       <div className="container mx-auto px-4 md:px-6">
-        <div className="flex items-center justify-between">
+        <div className="relative flex flex-col md:flex-row items-center justify-between">
           <Link 
             to="/" 
-            className="flex items-center space-x-2"
+            className="flex items-center py-3 md:py-4"
             onClick={closeMenu}
           >
-            <Leaf className="h-6 w-6 text-herb-600" />
-            <span className="font-serif text-2xl font-semibold text-herb-800">Herbal Harmony</span>
+            <img 
+              src="/images/herbal-db-logo.png" 
+              alt="Wellness is Golden" 
+              className="h-32 md:h-48 lg:h-56 w-auto max-w-full"
+            />
           </Link>
 
           {/* Desktop Navigation */}
@@ -56,15 +62,18 @@ const Navigation = () => {
           </div>
 
           {/* Mobile Navigation Toggle */}
-          <div className="md:hidden">
-            <Button 
-              variant="ghost" 
-              size="sm" 
+          <div className="md:hidden absolute top-4 right-4">
+            <button
               onClick={toggleMenu}
-              className="text-herb-800 hover:bg-herb-200 hover:text-herb-600"
+              className="text-herb-800 focus:outline-none"
+              aria-label="Toggle menu"
             >
-              {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-            </Button>
+              {isMenuOpen ? (
+                <X className="h-6 w-6" />
+              ) : (
+                <Menu className="h-6 w-6" />
+              )}
+            </button>
           </div>
         </div>
 

@@ -205,6 +205,12 @@ const HerbDetail = ({ herb, onClose }: HerbDetailProps) => {
           Preparations
         </button>
         <button 
+          className={`px-6 py-3 font-medium ${activeTab === 'conditions' ? `text-gray-800 border-b-2 ${categoryColor.replace('bg-', 'border-')}` : 'text-gray-500'}`}
+          onClick={() => setActiveTab('conditions')}
+        >
+          Health Conditions
+        </button>
+        <button 
           className={`px-6 py-3 font-medium ${activeTab === 'history' ? `text-gray-800 border-b-2 ${categoryColor.replace('bg-', 'border-')}` : 'text-gray-500'}`}
           onClick={() => setActiveTab('history')}
         >
@@ -215,6 +221,12 @@ const HerbDetail = ({ herb, onClose }: HerbDetailProps) => {
           onClick={() => setActiveTab('studies')}
         >
           Scientific Studies
+        </button>
+        <button 
+          className={`px-6 py-3 font-medium ${activeTab === 'collections' ? `text-gray-800 border-b-2 ${categoryColor.replace('bg-', 'border-')}` : 'text-gray-500'}`}
+          onClick={() => setActiveTab('collections')}
+        >
+          Collections
         </button>
       </div>
       
@@ -343,13 +355,122 @@ const HerbDetail = ({ herb, onClose }: HerbDetailProps) => {
                     ))}
                   </ol>
                 </div>
+                
+                {/* Show detailed preparation if available */}
+                {herb.detailedPreparation && method.name === 'Decoction' && herb.detailedPreparation.decoction && (
+                  <div className="mt-3 ml-10 p-3 bg-white rounded border border-dashed">
+                    <p className="text-sm italic">{herb.detailedPreparation.decoction}</p>
+                  </div>
+                )}
+                {herb.detailedPreparation && method.name === 'Tincture' && herb.detailedPreparation.tincture && (
+                  <div className="mt-3 ml-10 p-3 bg-white rounded border border-dashed">
+                    <p className="text-sm italic">{herb.detailedPreparation.tincture}</p>
+                  </div>
+                )}
+                {herb.detailedPreparation && method.name === 'Capsules' && herb.detailedPreparation.capsules && (
+                  <div className="mt-3 ml-10 p-3 bg-white rounded border border-dashed">
+                    <p className="text-sm italic">{herb.detailedPreparation.capsules}</p>
+                  </div>
+                )}
               </div>
             ))}
+            
+            {/* Additional preparation methods if available */}
+            {herb.detailedPreparation && herb.detailedPreparation.tea && (
+              <div className="p-4 bg-teal-50 rounded-lg border border-teal-100 shadow-sm">
+                <div className="flex items-center gap-2">
+                  <div className="text-teal-700 bg-white p-2 rounded-full shadow-sm">
+                    <Droplet className="w-6 h-6" />
+                  </div>
+                  <h4 className="font-medium text-teal-800">Tea Preparation</h4>
+                </div>
+                <p className="text-teal-700 text-sm ml-10">Herbal infusion in hot water</p>
+                <div className="mt-3 ml-10 p-3 bg-white rounded border border-dashed">
+                  <p className="text-sm italic">{herb.detailedPreparation.tea}</p>
+                </div>
+              </div>
+            )}
+            
+            {herb.detailedPreparation && herb.detailedPreparation.poultice && (
+              <div className="p-4 bg-indigo-50 rounded-lg border border-indigo-100 shadow-sm">
+                <div className="flex items-center gap-2">
+                  <div className="text-indigo-700 bg-white p-2 rounded-full shadow-sm">
+                    <Leaf className="w-6 h-6" />
+                  </div>
+                  <h4 className="font-medium text-indigo-800">Poultice</h4>
+                </div>
+                <p className="text-indigo-700 text-sm ml-10">External application of crushed herbs</p>
+                <div className="mt-3 ml-10 p-3 bg-white rounded border border-dashed">
+                  <p className="text-sm italic">{herb.detailedPreparation.poultice}</p>
+                </div>
+              </div>
+            )}
+            
+            {herb.detailedPreparation && herb.detailedPreparation.oil && (
+              <div className="p-4 bg-amber-50 rounded-lg border border-amber-100 shadow-sm">
+                <div className="flex items-center gap-2">
+                  <div className="text-amber-700 bg-white p-2 rounded-full shadow-sm">
+                    <Droplet className="w-6 h-6" />
+                  </div>
+                  <h4 className="font-medium text-amber-800">Herbal Oil</h4>
+                </div>
+                <p className="text-amber-700 text-sm ml-10">Herb-infused carrier oil</p>
+                <div className="mt-3 ml-10 p-3 bg-white rounded border border-dashed">
+                  <p className="text-sm italic">{herb.detailedPreparation.oil}</p>
+                </div>
+              </div>
+            )}
             
             <div className="mt-4 p-4 bg-gray-50 rounded-lg">
               <h3 className="font-medium text-gray-800 mb-2">Additional Preparation Information</h3>
               <p className="text-gray-700">{herb.preparation}</p>
             </div>
+            
+            {/* Dosage Information */}
+            {herb.dosage && (
+              <div className="mt-6 border rounded-lg overflow-hidden shadow-sm">
+                <div className="bg-blue-600 text-white p-3">
+                  <h3 className="font-medium flex items-center">
+                    <Clock className="w-5 h-5 mr-2" />
+                    Recommended Dosage
+                  </h3>
+                </div>
+                <div className="p-4 bg-white">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {herb.dosage.adult && (
+                      <div className="p-3 bg-gray-50 rounded border">
+                        <h4 className="text-sm font-medium text-gray-700">Adult Dosage</h4>
+                        <p className="text-sm mt-1">{herb.dosage.adult}</p>
+                      </div>
+                    )}
+                    {herb.dosage.child && (
+                      <div className="p-3 bg-gray-50 rounded border">
+                        <h4 className="text-sm font-medium text-gray-700">Child Dosage</h4>
+                        <p className="text-sm mt-1">{herb.dosage.child}</p>
+                      </div>
+                    )}
+                    {herb.dosage.elderly && (
+                      <div className="p-3 bg-gray-50 rounded border">
+                        <h4 className="text-sm font-medium text-gray-700">Elderly Dosage</h4>
+                        <p className="text-sm mt-1">{herb.dosage.elderly}</p>
+                      </div>
+                    )}
+                    {herb.dosage.pregnant && (
+                      <div className="p-3 bg-gray-50 rounded border">
+                        <h4 className="text-sm font-medium text-gray-700">Pregnancy & Nursing</h4>
+                        <p className="text-sm mt-1">{herb.dosage.pregnant}</p>
+                      </div>
+                    )}
+                  </div>
+                  {herb.dosage.maximum && (
+                    <div className="mt-4 p-3 bg-red-50 rounded border border-red-100">
+                      <h4 className="text-sm font-medium text-red-700">Maximum Dosage & Warnings</h4>
+                      <p className="text-sm mt-1">{herb.dosage.maximum}</p>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
           </div>
         </div>
       )}
@@ -413,7 +534,122 @@ const HerbDetail = ({ herb, onClose }: HerbDetailProps) => {
                 including anti-inflammatory, antimicrobial, and antioxidant pathways.
               </p>
             </div>
+            
+            {/* Research references if available */}
+            {herb.research && herb.research.length > 0 && (
+              <div className="mt-6 border rounded-lg overflow-hidden shadow-sm">
+                <div className="bg-indigo-600 text-white p-3">
+                  <h3 className="font-medium">Research References</h3>
+                </div>
+                <div className="p-4 bg-white">
+                  <ul className="list-disc ml-5 space-y-2">
+                    {herb.research.map((reference, index) => (
+                      <li key={index} className="text-sm text-gray-700">{reference}</li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            )}
           </div>
+        </div>
+      )}
+      
+      {/* Health Conditions Tab Content */}
+      {activeTab === 'conditions' && (
+        <div className="p-6">
+          <h2 className="text-lg font-bold text-gray-800 mb-4">Health Conditions</h2>
+          
+          {herb.conditions && herb.conditions.length > 0 ? (
+            <div className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {herb.conditions.map((condition, index) => (
+                  <div key={index} className="border rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+                    <div className={`${categoryColor} h-2`}></div>
+                    <div className="p-4">
+                      <h3 className="font-medium text-gray-800">{condition}</h3>
+                      <p className="text-sm text-gray-600 mt-2">
+                        {herb.name} may help support those with {condition.toLowerCase()}.
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              
+              {herb.warnings && herb.warnings.length > 0 && (
+                <div className="mt-6 border rounded-lg overflow-hidden shadow-sm bg-red-50">
+                  <div className="bg-red-600 text-white p-3">
+                    <h3 className="font-medium flex items-center">
+                      <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                      </svg>
+                      Important Warnings
+                    </h3>
+                  </div>
+                  <div className="p-4">
+                    <ul className="list-disc ml-5 space-y-2">
+                      {herb.warnings.map((warning, index) => (
+                        <li key={index} className="text-sm text-red-700">{warning}</li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              )}
+            </div>
+          ) : (
+            <div className="text-center py-10">
+              <p className="text-gray-500">No specific health conditions information available for {herb.name}.</p>
+            </div>
+          )}
+        </div>
+      )}
+      
+      {/* Collections Tab Content */}
+      {activeTab === 'collections' && (
+        <div className="p-6">
+          <h2 className="text-lg font-bold text-gray-800 mb-4">Specialized Collections</h2>
+          
+          {herb.collections && herb.collections.length > 0 ? (
+            <div className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {herb.collections.map((collection, index) => {
+                  // Generate a consistent color for each collection
+                  const collectionColors = [
+                    { bg: 'bg-emerald-100', text: 'text-emerald-800', border: 'border-emerald-200' },
+                    { bg: 'bg-purple-100', text: 'text-purple-800', border: 'border-purple-200' },
+                    { bg: 'bg-amber-100', text: 'text-amber-800', border: 'border-amber-200' },
+                    { bg: 'bg-blue-100', text: 'text-blue-800', border: 'border-blue-200' },
+                    { bg: 'bg-rose-100', text: 'text-rose-800', border: 'border-rose-200' },
+                    { bg: 'bg-teal-100', text: 'text-teal-800', border: 'border-teal-200' },
+                  ];
+                  const colorIndex = index % collectionColors.length;
+                  const { bg, text, border } = collectionColors[colorIndex];
+                  
+                  return (
+                    <div key={index} className={`border rounded-lg overflow-hidden shadow-sm ${bg} ${border}`}>
+                      <div className="p-4">
+                        <h3 className={`font-medium ${text}`}>{collection}</h3>
+                        <p className="text-sm text-gray-600 mt-2">
+                          {herb.name} is part of the {collection} collection.
+                        </p>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+              
+              <div className="p-4 bg-gray-50 rounded-lg border shadow-sm">
+                <h3 className="font-medium text-gray-800 mb-2">About Collections</h3>
+                <p className="text-sm text-gray-700">
+                  Collections group herbs with similar properties, uses, or cultural significance. 
+                  {herb.name} belongs to {herb.collections.length} specialized collection(s).
+                </p>
+              </div>
+            </div>
+          ) : (
+            <div className="text-center py-10">
+              <p className="text-gray-500">{herb.name} is not currently part of any specialized collections.</p>
+            </div>
+          )}
         </div>
       )}
       
