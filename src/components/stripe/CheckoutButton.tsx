@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ShoppingCart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Ebook } from "@/types";
@@ -6,6 +6,7 @@ import { createCheckoutSession } from "@/integrations/stripe/checkout";
 import { toast } from "sonner";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import RefundPolicy from "./RefundPolicy";
+import { supabase } from "@/integrations/supabase/client";
 
 interface CheckoutButtonProps {
   ebook: Ebook;
@@ -24,11 +25,26 @@ const CheckoutButton = ({
 }: CheckoutButtonProps) => {
   const [isLoading, setIsLoading] = useState(false);
   const [showConfirmation, setShowConfirmation] = useState(false);
+  const [userId, setUserId] = useState<string | null>(null);
+  
+  // Get the current user when the component mounts
+  useEffect(() => {
+    const getCurrentUser = async () => {
+      const { data } = await supabase.auth.getUser();
+      if (data?.user) {
+        setUserId(data.user.id);
+        console.log('Current user ID:', data.user.id);
+      }
+    };
+    
+    getCurrentUser();
+  }, []);
 
   const handleCheckout = async () => {
     try {
       setIsLoading(true);
-      await createCheckoutSession(ebook);
+      console.log('Starting checkout with user ID:', userId);
+      await createCheckoutSession(ebook, userId || undefined);
       // Note: The user will be redirected to Stripe's checkout page
     } catch (error) {
       console.error("Checkout error:", error);

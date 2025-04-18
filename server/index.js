@@ -10,7 +10,7 @@ const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY, {
 const { createClient } = require('@supabase/supabase-js');
 
 const app = express();
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 3002;
 
 // Initialize Supabase client
 const supabaseUrl = process.env.SUPABASE_URL;
@@ -19,7 +19,7 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 
 // Middleware
 app.use(cors({
-  origin: ['http://localhost:8082', 'http://localhost:8083', 'http://127.0.0.1:63113'],
+  origin: ['http://localhost:8082', 'http://localhost:8083', 'http://localhost:8089', 'http://127.0.0.1:63113'],
   credentials: true
 }));
 
@@ -34,7 +34,7 @@ app.use(express.json());
 app.post('/api/create-checkout-session', async (req, res) => {
   console.log('Received checkout request:', req.body);
   try {
-    const { ebook } = req.body;
+    const { ebook, userId } = req.body;
     
     if (!ebook || !ebook.id || !ebook.name || !ebook.price) {
       console.error('Missing required ebook information:', req.body);
@@ -112,11 +112,13 @@ app.post('/api/create-checkout-session', async (req, res) => {
         },
       ],
       mode: 'payment',
-      success_url: `${process.env.CLIENT_URL || 'http://localhost:8083'}/checkout-success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${process.env.CLIENT_URL || 'http://localhost:8083'}/ebooks`,
+      success_url: `${process.env.CLIENT_URL || 'http://localhost:8089'}/checkout-success?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${process.env.CLIENT_URL || 'http://localhost:8089'}/ebooks`,
       metadata: {
         ebookId: ebookData.id,
       },
+      // Only include client_reference_id if userId is a non-empty string
+      ...(userId && userId.trim() !== '' ? { client_reference_id: userId } : {}),
     });
 
     console.log('Checkout session created successfully:', { id: session.id, url: session.url });
@@ -179,262 +181,100 @@ app.get('/api/verify-purchase', async (req, res) => {
       .select('*')
       .eq('id', ebookId)
       .single();
-
-    if (error) {
-      console.error('Error fetching ebook from Supabase:', error);
-      return res.status(404).json({ error: 'Error fetching eBook', details: error });
+    
+    if (error || !ebook) {
+      console.error('Error fetching ebook:', error);
+      return res.status(404).json({ error: 'eBook not found', details: error });
     }
     
-    if (!ebook) {
-      console.error('No ebook found with ID:', ebookId);
-      return res.status(404).json({ error: 'eBook not found' });
-    }
-
-    console.log('Ebook found:', {
-      id: ebook.id,
-      title: ebook.title,
-      buy_link: ebook.buy_link
-    });
+    console.log('Ebook found:', ebook.title);
     
-    // Check if we have a file_path field to use directly
-    let filePath = ebook.file_path;
+    // Possible filenames to check (common formats for ebooks)
+    const possibleFilenames = [
+      `${ebook.id}.pdf`,
+      `${ebook.id}.epub`,
+      `${ebook.title.replace(/[^a-z0-9]/gi, '_').toLowerCase()}.pdf`,
+      `${ebook.title.replace(/[^a-z0-9]/gi, '_').toLowerCase()}.epub`,
+    ];
     
-    // For testing, create a mock download URL if no file path is available
-    if (!filePath) {
-      console.log('No file_path found for ebook, checking buy_link as fallback');
-      
-      // Try to extract from buy_link as fallback
-      if (ebook.buy_link) {
-        try {
-          // Handle different URL formats
-          if (ebook.buy_link.includes('/object/sign/')) {
-            // Extract the path after the bucket name
-            const urlParts = ebook.buy_link.split('/object/sign/');
-            if (urlParts.length > 1) {
-              const pathParts = urlParts[1].split('/');
-              // Remove the bucket name and get the rest of the path
-              pathParts.shift();
-              filePath = pathParts.join('/');
-            } else {
-              filePath = ebook.buy_link.split('/').pop();
-            }
-          } else {
-            // Simple extraction for direct file paths
-            filePath = ebook.buy_link.split('/').pop();
-          }
-          
-          // Remove any query parameters
-          filePath = filePath.split('?')[0];
-          
-          console.log('Extracted file path from buy_link:', filePath);
-        } catch (error) {
-          console.error('Error extracting file path from buy_link:', error);
-          filePath = ebook.buy_link.split('/').pop();
-        }
-      } else {
-        console.log('No file_path or buy_link found, creating mock download URL');
-        return res.json({
-          ebookId: ebook.id,
-          ebookTitle: ebook.title,
-          downloadUrl: `https://example.com/mock-download/${ebook.id}`,
-          purchaseDate: new Date().toISOString(),
-        });
-      }
-    } else {
-      console.log('Using file_path directly:', filePath);
-    }
+    console.log('Checking for possible filenames:', possibleFilenames);
     
-    console.log('Generating signed URL for file:', filePath);
-    
-    // Generate a signed URL for the eBook download
-    try {
-      // List all buckets to verify what's available
-      const { data: buckets, error: bucketsError } = await supabase.storage.listBuckets();
-      console.log('Available storage buckets:', { buckets, bucketsError });
+    // List all files in the ebooks bucket to find the right one
+    const { data: allFiles, error: listError } = await supabase.storage
+      .from('ebooks')
+      .list();
       
-      // List root contents of the ebooks bucket to see what's there
-      const { data: rootContents, error: rootError } = await supabase.storage
-        .from('ebooks')
-        .list();
-      console.log('Root contents of ebooks bucket:', { rootContents, rootError });
-      
-      // First check if the file exists in the storage bucket
-      // Try both with original path and with normalized path (handling both 'ebooks' and 'Ebooks' folders)
-      const originalPath = filePath;
-      
-      // Create alternative paths to check
-      const lowercasePath = filePath.replace(/^Ebooks\//, 'ebooks/');
-      const uppercasePath = filePath.replace(/^ebooks\//, 'Ebooks/');
-      const noFolderPath = filePath.replace(/^(Ebooks|ebooks)\//, '');
-      
-      // Based on the URL shared, files are directly in the root of the bucket
-      // So prioritize the noFolderPath
-      console.log('Checking file paths:', { noFolderPath, originalPath, lowercasePath, uppercasePath });
-      
-      // Check no folder path first (directly in root) since that's where files are stored based on the URL
-      const { data: alternative3FileExists, error: alternative3FileCheckError } = await supabase.storage
-        .from('ebooks')
-        .list('', {
-          search: noFolderPath
-        });
-      
-      // If not found, check original path
-      let fileExists = null;
-      let fileCheckError = null;
-      
-      if (alternative3FileCheckError || !alternative3FileExists || alternative3FileExists.length === 0) {
-        const { data: origData, error: origError } = await supabase.storage
-          .from('ebooks')
-          .list('', {
-            search: originalPath
-          });
-          
-        fileExists = origData;
-        fileCheckError = origError;
-      }
-      
-      // If still not found, try lowercase path
-      let alternativeFileExists = null;
-      let alternativeFileCheckError = null;
-      
-      if ((alternative3FileCheckError || !alternative3FileExists || alternative3FileExists.length === 0) && 
-          (fileCheckError || !fileExists || fileExists.length === 0)) {
-        const { data: altData, error: altError } = await supabase.storage
-          .from('ebooks')
-          .list('', {
-            search: lowercasePath
-          });
-          
-        alternativeFileExists = altData;
-        alternativeFileCheckError = altError;
-      }
-      
-      // If still not found, try uppercase path
-      let alternative2FileExists = null;
-      let alternative2FileCheckError = null;
-      
-      if ((alternative3FileCheckError || !alternative3FileExists || alternative3FileExists.length === 0) && 
-          (fileCheckError || !fileExists || fileExists.length === 0) && 
-          (alternativeFileCheckError || !alternativeFileExists || alternativeFileExists.length === 0)) {
-        const { data: alt2Data, error: alt2Error } = await supabase.storage
-          .from('ebooks')
-          .list('', {
-            search: uppercasePath
-          });
-          
-        alternative2FileExists = alt2Data;
-        alternative2FileCheckError = alt2Error;
-      }
-      
-      console.log('File check results:', { 
-        original: { fileExists, fileCheckError },
-        lowercase: { alternativeFileExists, alternativeFileCheckError },
-        uppercase: { alternative2FileExists, alternative2FileCheckError },
-        noFolder: { alternative3FileExists, alternative3FileCheckError }
-      });
-      
-      // Determine which path to use
-      let pathToUse = originalPath;
-      let foundFile = false;
-      
-      if (fileExists && fileExists.length > 0) {
-        foundFile = true;
-        pathToUse = originalPath;
-      } else if (alternativeFileExists && alternativeFileExists.length > 0) {
-        foundFile = true;
-        pathToUse = lowercasePath;
-      } else if (alternative2FileExists && alternative2FileExists.length > 0) {
-        foundFile = true;
-        pathToUse = uppercasePath;
-      } else if (alternative3FileExists && alternative3FileExists.length > 0) {
-        foundFile = true;
-        pathToUse = noFolderPath;
-      }
-      
-      console.log('Path determination:', { pathToUse, foundFile });
-      
-      // If we can't find the file in any location, provide a mock download
-      if (!foundFile) {
-        console.log('File not found in storage or error checking, providing mock download URL');
-        
-        // Return a mock download URL for testing
-        const responseData = {
-          ebookId: ebook.id,
-          ebookTitle: ebook.title,
-          downloadUrl: `https://example.com/mock-download/${ebook.id}`,
-          purchaseDate: new Date().toISOString(),
-          isMock: true
-        };
-        
-        console.log('Sending mock download response:', responseData);
-        return res.json(responseData);
-      }
-      
-      // If the file exists, generate a signed URL using the path we found
-      const { data: signedURLData, error: signedUrlError } = await supabase.storage
-        .from('ebooks')
-        .createSignedUrl(pathToUse, 60 * 60); // 1 hour expiry
-
-      if (signedUrlError) {
-        console.error('Error creating signed URL:', signedUrlError);
-        
-        // Provide a mock URL as fallback
-        const mockResponseData = {
-          ebookId: ebook.id,
-          ebookTitle: ebook.title,
-          downloadUrl: `https://example.com/mock-download/${ebook.id}`,
-          purchaseDate: new Date().toISOString(),
-          isMock: true
-        };
-        
-        console.log('Signed URL error, sending mock response:', mockResponseData);
-        return res.json(mockResponseData);
-      }
-      
-      if (!signedURLData?.signedUrl) {
-        console.error('No signed URL returned from Supabase');
-        
-        // Provide a mock URL as fallback
-        const mockResponseData = {
-          ebookId: ebook.id,
-          ebookTitle: ebook.title,
-          downloadUrl: `https://example.com/mock-download/${ebook.id}`,
-          purchaseDate: new Date().toISOString(),
-          isMock: true
-        };
-        
-        console.log('No signed URL, sending mock response:', mockResponseData);
-        return res.json(mockResponseData);
-      }
-      
-      console.log('Successfully generated signed URL');
-      
-      // Return the purchase data with a real download URL
-      const responseData = {
-        ebookId: ebook.id,
-        ebookTitle: ebook.title,
-        downloadUrl: signedURLData.signedUrl,
-        purchaseDate: new Date().toISOString(),
-        isMock: false
-      };
-      
-      console.log('Sending successful response with real URL:', responseData);
-      return res.json(responseData);
-    } catch (storageError) {
-      console.error('Error in Supabase storage operations:', storageError);
-      
-      // Provide a mock URL as fallback for any errors
-      const mockResponseData = {
+    if (listError) {
+      console.error('Error listing files in ebooks bucket:', listError);
+      return res.status(500).json({ 
+        error: 'Could not list files in storage bucket',
         ebookId: ebook.id,
         ebookTitle: ebook.title,
         downloadUrl: `https://example.com/mock-download/${ebook.id}`,
         purchaseDate: new Date().toISOString(),
         isMock: true
-      };
-      
-      console.log('Storage error, sending mock response:', mockResponseData);
-      return res.json(mockResponseData);
+      });
     }
+    
+    console.log('Files in ebooks bucket:', allFiles?.map(f => f.name) || []);
+    
+    // Find the file that matches one of our possible filenames
+    const matchingFile = allFiles?.find(file => 
+      possibleFilenames.some(name => file.name.toLowerCase() === name.toLowerCase())
+    );
+    
+    if (matchingFile) {
+      console.log('Found matching file:', matchingFile.name);
+      
+      // Generate a signed URL for the eBook download
+      try {
+        // Create a signed URL that expires in 1 hour (3600 seconds)
+        const { data: signedURLData, error: signedUrlError } = await supabase.storage
+          .from('ebooks')
+          .createSignedUrl(matchingFile.name, 3600);
+          
+        if (signedUrlError) {
+          console.error('Error creating signed URL:', signedUrlError);
+          // Fall through to the mock response below
+        }
+        
+        if (!signedURLData?.signedUrl) {
+          console.error('No signed URL returned from Supabase');
+          // Fall through to the mock response below
+        }
+        
+        console.log('Generated signed URL successfully');
+        
+        // Return the purchase data with a real download URL
+        const responseData = {
+          ebookId: ebook.id,
+          ebookTitle: ebook.title,
+          downloadUrl: signedURLData.signedUrl,
+          purchaseDate: new Date().toISOString(),
+          isMock: false
+        };
+        
+        console.log('Sending successful response with real URL:', responseData);
+        return res.json(responseData);
+      } catch (error) {
+        console.error('Error generating signed URL:', error);
+        // Fall through to the mock response below
+      }
+    }
+    
+    // No matching file found or error generating URL, provide a helpful error message
+    console.log('No matching file found for ebook:', ebook.id);
+    console.log('Attempted to find files with names:', possibleFilenames);
+    
+    // Return a response with mock data since we couldn't find the real file
+    return res.json({
+      ebookId: ebook.id,
+      ebookTitle: ebook.title,
+      downloadUrl: `https://example.com/mock-download/${ebook.id}`,
+      purchaseDate: new Date().toISOString(),
+      isMock: true,
+      message: 'This is a mock download because the actual file could not be found. Please contact support.'
+    });
   } catch (error) {
     console.error('Error verifying purchase:', error);
     let errorMessage = 'Failed to verify purchase';
@@ -461,13 +301,20 @@ app.get('/api/verify-purchase', async (req, res) => {
 // Webhook to handle Stripe events
 app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res) => {
   const sig = req.headers['stripe-signature'];
+  const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
+  
+  if (!webhookSecret) {
+    console.error('Missing STRIPE_WEBHOOK_SECRET environment variable');
+    return res.status(500).send('Webhook secret is not configured');
+  }
+  
   let event;
 
   try {
     event = stripe.webhooks.constructEvent(
       req.body,
       sig,
-      process.env.STRIPE_WEBHOOK_SECRET
+      webhookSecret
     );
   } catch (err) {
     console.error(`Webhook Error: ${err.message}`);
@@ -478,15 +325,65 @@ app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res)
   switch (event.type) {
     case 'checkout.session.completed':
       const session = event.data.object;
-      // Record the purchase in your database
+      console.log('Payment succeeded for session:', session.id);
+      
+      // Record the purchase in Supabase
       try {
-        await supabase.from('purchases').insert({
-          user_id: session.client_reference_id || 'anonymous',
-          ebook_id: session.metadata.ebookId,
-          session_id: session.id,
-          amount: session.amount_total / 100,
-          status: 'completed',
+        // Get customer information
+        const customer = await stripe.customers.retrieve(session.customer);
+        console.log('Customer data:', customer);
+        
+        // Get line items from the session
+        const lineItems = await stripe.checkout.sessions.listLineItems(session.id);
+        console.log('Line items:', lineItems.data);
+        
+        // Get user ID from metadata if available
+        const userId = session.client_reference_id || session.metadata?.userId || null;
+        console.log('User ID from metadata:', userId);
+        
+        // Create the purchase record
+        const { data: purchaseData, error: purchaseError } = await supabase
+          .from('user_purchases')
+          .insert({
+            user_id: userId,
+            stripe_session_id: session.id,
+            stripe_customer_id: session.customer,
+            total_amount: session.amount_total / 100, // Convert from cents to dollars
+            status: 'completed'
+          })
+          .select()
+          .single();
+        
+        if (purchaseError) {
+          console.error('Error creating purchase record:', purchaseError);
+          return res.status(500).send('Error recording purchase');
+        }
+        
+        console.log('Created purchase record:', purchaseData);
+        
+        // Record each line item as a purchase item
+        const purchaseItems = lineItems.data.map(item => {
+          // Extract the product ID from the description or metadata
+          const ebookId = session.metadata?.ebookId || null;
+          
+          return {
+            purchase_id: purchaseData.id,
+            ebook_id: ebookId,
+            price: item.amount_total / 100 // Convert from cents to dollars
+          };
         });
+        
+        if (purchaseItems.length > 0) {
+          const { data: itemsData, error: itemsError } = await supabase
+            .from('purchase_items')
+            .insert(purchaseItems);
+          
+          if (itemsError) {
+            console.error('Error creating purchase items:', itemsError);
+          } else {
+            console.log('Created purchase items successfully');
+          }
+        }
       } catch (error) {
         console.error('Error recording purchase:', error);
       }

@@ -3,10 +3,10 @@ import { stripePromise } from "./config";
 import { toast } from "sonner";
 
 // API base URL - points to our backend server
-const API_BASE_URL = 'http://localhost:3001';
+const API_BASE_URL = 'http://localhost:3002';
 
 // Function to create a Stripe checkout session for an eBook
-export const createCheckoutSession = async (ebook: Ebook) => {
+export const createCheckoutSession = async (ebook: Ebook, userId?: string) => {
   try {
     console.log('Creating checkout session for ebook:', ebook);
     
@@ -32,6 +32,7 @@ export const createCheckoutSession = async (ebook: Ebook) => {
           price: ebook.price,
           author: ebook.author,
         },
+        userId: userId || null,
       }),
       // Add mode 'cors' to explicitly request CORS
       mode: 'cors',
